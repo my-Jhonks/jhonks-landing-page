@@ -29,8 +29,8 @@
     />
 
     <!-- Favicons -->
-    <link href="/favicon.ico" rel="icon" />
-    <link href="/favicon.ico" rel="apple-touch-icon" />
+    <link href="/favicon.png" rel="icon" />
+    <link href="/favicon.png" rel="apple-touch-icon" />
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com" rel="preconnect" />
@@ -75,9 +75,9 @@
       <div
         class="container-fluid container-xl position-relative d-flex align-items-center"
       >
-        <a href="/" class="logo d-flex align-items-center me-auto">
+        <a href="/" class="logo d-flex align-items-center me-auto" style="height: 60px;">
           <img
-            style="height: 300px; width: 150px"
+            style="height: 60px; width: auto;"
             src="assets/img/logo.png"
             alt=""
           />
@@ -94,7 +94,6 @@
 
             <li><a href="/#contact">Contact</a></li>
             <li><a href="https://app.jhonks.com/">Login</a></li>
-            <b>/</b>
           </ul>
           <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
         </nav>
@@ -265,7 +264,21 @@
               data-aos="fade-up"
               data-aos-delay="200"
             >
-              <div class="row gy-4">
+            <div class="row gy-4">
+              <div class="d-none d-lg-block col-lg-6">
+                  <img src="assets/img/waste-side.png" class="img-fluid h-100" alt="" />
+              </div>
+              <div class="col-lg-6 d-flex flex-column h-100 gy-4" style="gap: 24px">
+                  <div class="col-lg-12 flex-grow-1">
+                      <img src="assets/img/rm-1.png" class="img-fluid h-100" style="min-height: 239px;" alt="" />
+                      <!-- <img src="assets/img/rm-2.png" class="img-fluid h-100" alt="" /> -->
+                  </div>
+                  <div class="col-lg-12 flex-grow-1">
+                      <img src="assets/img/rm-2.png" class="img-fluid h-100" style="min-height: 239px;" alt="" />
+                  </div>
+              </div>
+          </div>
+              <!-- <div class="row gy-4">
                 <div class="col-lg-6">
                   <img
                     src="assets/img/waste-side.png"
@@ -283,68 +296,12 @@
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
       </section>
       <!-- /About Section -->
-
-      <!-- Clients Section -->
-      <!-- <section id="clients" class="clients section">
-        <div class="container" data-aos="fade-up">
-          <div class="row gy-4">
-            <div class="col-xl-2 col-md-3 col-6 client-logo">
-              <img
-                src="assets/img/clients/part1.png"
-                class="img-fluid"
-                alt=""
-              />
-            </div>
-
-            <div class="col-xl-2 col-md-3 col-6 client-logo">
-              <img
-                src="assets/img/clients/part2.png"
-                class="img-fluid"
-                alt=""
-              />
-            </div>
-
-            <div class="col-xl-2 col-md-3 col-6 client-logo">
-              <img
-                src="assets/img/clients/part3.png"
-                class="img-fluid"
-                alt=""
-              />
-            </div>
-
-            <div class="col-xl-2 col-md-3 col-6 client-logo">
-              <img
-                src="assets/img/clients/part4.png"
-                class="img-fluid"
-                alt=""
-              />
-            </div>
-
-            <div class="col-xl-2 col-md-3 col-6 client-logo">
-              <img
-                src="assets/img/clients/part5.png"
-                class="img-fluid"
-                alt=""
-              />
-            </div>
-
-            <div class="col-xl-2 col-md-3 col-6 client-logo">
-              <img
-                src="assets/img/clients/part6.png"
-                class="img-fluid"
-                alt=""
-              />
-            </div>
-          </div>
-        </div>
-      </section> -->
-      <!-- /Clients Section -->
 
       <!-- Features Section -->
       <section id="features" class="features section">
@@ -422,7 +379,6 @@
               <div class="tab-content" data-aos="fade-up" data-aos-delay="200">
                 <div class="tab-pane fade active show" id="features-tab-1">
                   <img
-                    style="height: 35rem"
                     src="assets/img/waste-sell-1.png"
                     alt=""
                     class="img-fluid"
