@@ -502,12 +502,12 @@
               <div class="content">
                 <h3>Jhonks is wherever you are! Need an Agent?</h3>
                 <p>
-                  Download the app or Login to use the WebApp here on your
-                  mobile browser to Locate the nearest agent to you.
+                  Download the Jhonks app or right here on your
+                   browser to Locate the nearest agent to you.
                 </p>
                 <ul>
                   <li>
-                    <i class="bi bi-cart-check"></i>Join over 2 million Jhonks
+                    <i class="bi bi-cart-check"></i>Join over 1 million Jhonks
                     Sellers
                   </li>
                   <li>
@@ -689,6 +689,18 @@
                       Signing up is easy. Create an account on our website of
                       App, and Login, select the raw material or waste product
                       you have and find our nearest Agent on the App.
+                    </p>
+                  </div>
+                  <i class="faq-toggle bi bi-chevron-right"></i>
+                </div>
+                <!-- End Faq item-->
+
+                <div class="faq-item">
+                  <h3>Do agent come to pick up the materials or I will locate the agent?</h3>
+                  <div class="faq-content">
+                    <p>
+                     Our agents will come to pick up the materials from you.
+                     locate our nearest agent through the Jhonks App or website and contact them to pick up the materials.
                     </p>
                   </div>
                   <i class="faq-toggle bi bi-chevron-right"></i>
@@ -980,26 +992,16 @@
             <!-- End Google Maps -->
 
             <div class="col-lg-6">
-       
-              <form class="php-email-form" action="https://formsubmit.co/tolujohnofficial@gmail.com" method="POST" />
-
-              <!-- honeypot-->
-             <input type="text" name="_honey" style="display:none">
-
-             <!-- disable capthcha-->
-             <input type="hidden" name="_captcha" value="false">
- 
-             <!-- success page-->
-             <input type="hidden" name="_next" value="https://jhonks.com/">
-
+              <form id="contactForm" class="php-email-form" action="#" method="POST">
                 <div class="row gy-4">
                   <div class="col-md-6">
                     <input
                       type="text"
-                      name="Full&nbsp;Name" id="name"
+                      id="contactName"
+                      name="name"
                       class="form-control"
                       placeholder="Your Name"
-                      required=""
+                      required
                     />
                   </div>
 
@@ -1007,9 +1009,10 @@
                     <input
                       type="email"
                       class="form-control"
-                      name="Email" id="email"
+                      id="contactEmail"
+                      name="email"
                       placeholder="Your Email"
-                      required=""
+                      required
                     />
                   </div>
 
@@ -1017,26 +1020,31 @@
                     <input
                       type="text"
                       class="form-control"
+                      id="contactSubject"
                       name="subject"
                       placeholder="Subject"
-                      required=""
+                      required
                     />
                   </div>
 
                   <div class="col-md-12">
                     <textarea
                       class="form-control"
-                      name="Message" id="message"
+                      name="message"
+                      id="contactMessage"
                       rows="6"
                       placeholder="Message"
-                      required=""
+                      required
                     ></textarea>
                   </div>
 
                   <div class="col-md-12 text-center">
-                    
-
-                    <button type="submit" onclick="myfunction()">Send Message</button>
+                    <div class="loading" id="contactLoading" style="display: none;">Loading</div>
+                    <div class="error-message" id="contactErrorMessage" style="display: none;"></div>
+                    <div class="sent-message" id="contactSuccessMessage" style="display: none;">
+                      Your message has been sent. Thank you!
+                    </div>
+                    <button type="submit" id="contactSubmitBtn">Send Message</button>
                   </div>
                 </div>
               </form>
@@ -1057,7 +1065,7 @@
             </a>
             <div class="footer-contact pt-3">
               <p>7A Moses Emeya Close, Agege</p>
-              <p>Lagos, Nigerial</p>
+              <p>Lagos, Nigeria</p>
               <p class="mt-3">
                 <strong>Phone:</strong> <span>+234 814 844 4929</span>
               </p>
@@ -1106,20 +1114,14 @@
               Subscribe to our newsletter and receive the latest news about our
               products and services!
             </p>
-            <form
-              action="forms/newsletter.php"
-              method="post"
-              class="php-email-form"
-            >
+            <form id="newsletterForm" class="php-email-form" action="#" method="POST">
               <div class="newsletter-form">
-                <input type="email" name="email" /><input
-                  type="submit"
-                  value="Subscribe"
-                />
+                <input type="email" id="newsletterEmail" name="email" placeholder="Enter your email" required />
+                <input type="submit" id="newsletterSubmitBtn" value="Subscribe" />
               </div>
-              <div class="loading">Loading</div>
-              <div class="error-message"></div>
-              <div class="sent-message">
+              <div class="loading" id="newsletterLoading" style="display: none;">Loading</div>
+              <div class="error-message" id="newsletterErrorMessage" style="display: none;"></div>
+              <div class="sent-message" id="newsletterSuccessMessage" style="display: none;">
                 Your subscription request has been sent. Thank you!
               </div>
             </form>
@@ -1206,5 +1208,174 @@
 
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
+
+    <!-- Form Submission Scripts -->
+    <script>
+      // API Base URL 
+      // const API_BASE_URL = 'http://localhost:5000/api';
+      const API_BASE_URL = 'https://jhonksbackend.onrender.com/api';
+
+      // Wait for DOM to be fully loaded before attaching handlers
+      document.addEventListener('DOMContentLoaded', function() {
+        // Contact Form Handler
+        const contactForm = document.getElementById('contactForm');
+        if (contactForm) {
+        contactForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          
+          const submitBtn = document.getElementById('contactSubmitBtn');
+          const loadingDiv = document.getElementById('contactLoading');
+          const errorDiv = document.getElementById('contactErrorMessage');
+          const successDiv = document.getElementById('contactSuccessMessage');
+          const nameInput = document.getElementById('contactName');
+          const emailInput = document.getElementById('contactEmail');
+          const subjectInput = document.getElementById('contactSubject');
+          const messageInput = document.getElementById('contactMessage');
+
+          // Hide previous messages
+          errorDiv.style.display = 'none';
+          successDiv.style.display = 'none';
+          loadingDiv.style.display = 'block';
+          submitBtn.disabled = true;
+
+          try {
+            const formData = {
+              name: nameInput.value.trim(),
+              email: emailInput.value.trim(),
+              phone: '', // Optional field
+              subject: subjectInput.value.trim(),
+              message: messageInput.value.trim()
+            };
+
+            const response = await fetch(`${API_BASE_URL}/contact/submit`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(formData)
+            });
+
+            loadingDiv.style.display = 'none';
+
+            if (!response.ok) {
+              // Try to parse error response
+              let errorMessage = 'Error submitting your message. Please try again.';
+              try {
+                const errorData = await response.json();
+                errorMessage = errorData.message || errorMessage;
+              } catch (e) {
+                // If response is not JSON, use status text
+                errorMessage = `Error ${response.status}: ${response.statusText || errorMessage}`;
+              }
+              errorDiv.textContent = errorMessage;
+              errorDiv.style.display = 'block';
+              return;
+            }
+
+            const data = await response.json();
+
+            if (data.status === 'success') {
+              successDiv.style.display = 'block';
+              contactForm.reset();
+              // Scroll to success message
+              successDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } else {
+              errorDiv.textContent = data.message || 'Error submitting your message. Please try again.';
+              errorDiv.style.display = 'block';
+            }
+          } catch (error) {
+            console.error('Contact form error:', error);
+            loadingDiv.style.display = 'none';
+            let errorMessage = 'Network error. Please check your connection and try again.';
+            if (error.message && error.message.includes('CORS')) {
+              errorMessage = 'CORS error: The request was blocked. Please contact support.';
+            } else if (error.message) {
+              errorMessage = `Error: ${error.message}`;
+            }
+            errorDiv.textContent = errorMessage;
+            errorDiv.style.display = 'block';
+          } finally {
+            submitBtn.disabled = false;
+          }
+        });
+        }
+
+        // Newsletter Form Handler
+        const newsletterForm = document.getElementById('newsletterForm');
+        if (newsletterForm) {
+        newsletterForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          
+          const submitBtn = document.getElementById('newsletterSubmitBtn');
+          const loadingDiv = document.getElementById('newsletterLoading');
+          const errorDiv = document.getElementById('newsletterErrorMessage');
+          const successDiv = document.getElementById('newsletterSuccessMessage');
+          const emailInput = document.getElementById('newsletterEmail');
+
+          // Hide previous messages
+          errorDiv.style.display = 'none';
+          successDiv.style.display = 'none';
+          loadingDiv.style.display = 'block';
+          submitBtn.disabled = true;
+
+          try {
+            const formData = {
+              email: emailInput.value.trim()
+            };
+
+            const response = await fetch(`${API_BASE_URL}/newsletter/subscribe`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(formData)
+            });
+
+            loadingDiv.style.display = 'none';
+
+            if (!response.ok) {
+              // Try to parse error response
+              let errorMessage = 'Error subscribing. Please try again.';
+              try {
+                const errorData = await response.json();
+                errorMessage = errorData.message || errorMessage;
+              } catch (e) {
+                // If response is not JSON, use status text
+                errorMessage = `Error ${response.status}: ${response.statusText || errorMessage}`;
+              }
+              errorDiv.textContent = errorMessage;
+              errorDiv.style.display = 'block';
+              return;
+            }
+
+            const data = await response.json();
+
+            if (data.status === 'success') {
+              successDiv.style.display = 'block';
+              newsletterForm.reset();
+              // Scroll to success message
+              successDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } else {
+              errorDiv.textContent = data.message || 'Error subscribing. Please try again.';
+              errorDiv.style.display = 'block';
+            }
+          } catch (error) {
+            console.error('Newsletter form error:', error);
+            loadingDiv.style.display = 'none';
+            let errorMessage = 'Network error. Please check your connection and try again.';
+            if (error.message && error.message.includes('CORS')) {
+              errorMessage = 'CORS error: The request was blocked. Please contact support.';
+            } else if (error.message) {
+              errorMessage = `Error: ${error.message}`;
+            }
+            errorDiv.textContent = errorMessage;
+            errorDiv.style.display = 'block';
+          } finally {
+            submitBtn.disabled = false;
+          }
+        });
+        }
+      }); // End DOMContentLoaded
+    </script>
   </body>
 </html>
