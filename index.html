@@ -67,6 +67,99 @@
 
     <!-- Main CSS File -->
     <link href="assets/css/main.css" rel="stylesheet" />
+    
+    <!-- Custom Styles for Contact Form -->
+    <style>
+      /* Contact Form Button Styles */
+      #contactSubmitBtn {
+        background: linear-gradient(135deg, #059652 0%, #047a42 100%) !important;
+        color: #ffffff !important;
+        border: none !important;
+        padding: 12px 40px !important;
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        border-radius: 50px !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 4px 15px rgba(5, 150, 82, 0.3) !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        position: relative !important;
+        overflow: hidden !important;
+      }
+      
+      #contactSubmitBtn:hover:not(:disabled) {
+        background: linear-gradient(135deg, #047a42 0%, #035a31 100%) !important;
+        box-shadow: 0 6px 20px rgba(5, 150, 82, 0.4) !important;
+        transform: translateY(-2px) !important;
+      }
+      
+      #contactSubmitBtn:active:not(:disabled) {
+        transform: translateY(0) !important;
+        box-shadow: 0 2px 10px rgba(5, 150, 82, 0.3) !important;
+      }
+      
+      #contactSubmitBtn:disabled {
+        opacity: 0.6 !important;
+        cursor: not-allowed !important;
+        transform: none !important;
+      }
+      
+      /* Loading Animation */
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      /* Success Message Animation */
+      #contactSuccessMessage {
+        animation: slideIn 0.3s ease-out !important;
+      }
+      
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      /* Error Message Animation */
+      #contactErrorMessage {
+        animation: slideIn 0.3s ease-out !important;
+      }
+      
+      /* Newsletter Button Styles */
+      #newsletterSubmitBtn {
+        background: linear-gradient(135deg, #059652 0%, #047a42 100%) !important;
+        color: #ffffff !important;
+        border: none !important;
+        padding: 10px 25px !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        border-radius: 50px !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 3px 12px rgba(5, 150, 82, 0.3) !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+      }
+      
+      #newsletterSubmitBtn:hover:not(:disabled) {
+        background: linear-gradient(135deg, #047a42 0%, #035a31 100%) !important;
+        box-shadow: 0 5px 18px rgba(5, 150, 82, 0.4) !important;
+        transform: translateY(-2px) !important;
+      }
+      
+      #newsletterSubmitBtn:disabled {
+        opacity: 0.6 !important;
+        cursor: not-allowed !important;
+        transform: none !important;
+      }
+    </style>
   </head>
 
   <body class="index-page">
@@ -1039,12 +1132,18 @@
                   </div>
 
                   <div class="col-md-12 text-center">
-                    <div class="loading" id="contactLoading" style="display: none;">Loading</div>
-                    <div class="error-message" id="contactErrorMessage" style="display: none;"></div>
-                    <div class="sent-message" id="contactSuccessMessage" style="display: none;">
+                    <div class="loading" id="contactLoading" style="display: none; background: #f8f9fa; color: #059652; text-align: center; padding: 15px 20px; margin-bottom: 20px; border-radius: 8px; font-weight: 500; border: 2px solid #059652;">
+                      <i class="bi bi-arrow-repeat" style="animation: spin 1s linear infinite; display: inline-block; margin-right: 8px;"></i>
+                      Sending your message...
+                    </div>
+                    <div class="error-message" id="contactErrorMessage" style="display: none; background: #df1529; color: #ffffff; text-align: center; padding: 15px 20px; margin-bottom: 20px; border-radius: 8px; font-weight: 500; box-shadow: 0 2px 8px rgba(223, 21, 41, 0.2);"></div>
+                    <div class="sent-message" id="contactSuccessMessage" style="display: none; background: #059652; color: #ffffff; text-align: center; padding: 15px 20px; margin-bottom: 20px; border-radius: 8px; font-weight: 500; box-shadow: 0 2px 8px rgba(5, 150, 82, 0.2);">
+                      <i class="bi bi-check-circle-fill" style="margin-right: 8px; font-size: 1.2em;"></i>
                       Your message has been sent. Thank you!
                     </div>
-                    <button type="submit" id="contactSubmitBtn">Send Message</button>
+                    <button type="submit" id="contactSubmitBtn" style="background: linear-gradient(135deg, #059652 0%, #047a42 100%); color: #ffffff; border: none; padding: 12px 40px; font-size: 16px; font-weight: 600; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(5, 150, 82, 0.3); text-transform: uppercase; letter-spacing: 0.5px;">
+                      Send Message
+                    </button>
                   </div>
                 </div>
               </form>
@@ -1212,8 +1311,8 @@
     <!-- Form Submission Scripts -->
     <script>
       // API Base URL 
-      const API_BASE_URL = 'http://localhost:5000/api';
-      // const API_BASE_URL = 'https://jhonksbackend.onrender.com/api';
+      // const API_BASE_URL = 'http://localhost:5000/api';
+      const API_BASE_URL = 'https://jhonksbackend.onrender.com/api';
 
       // Wait for DOM to be fully loaded before attaching handlers
       document.addEventListener('DOMContentLoaded', function() {
@@ -1275,6 +1374,9 @@
           successDiv.style.display = 'none';
           loadingDiv.style.display = 'block';
           submitBtn.disabled = true;
+          submitBtn.style.opacity = '0.6';
+          submitBtn.style.cursor = 'not-allowed';
+          submitBtn.textContent = 'Sending...';
 
           try {
             const formData = {
@@ -1317,6 +1419,10 @@
               contactForm.reset();
               // Scroll to success message
               successDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+              // Auto-hide success message after 5 seconds
+              setTimeout(() => {
+                successDiv.style.display = 'none';
+              }, 5000);
             } else {
               errorDiv.textContent = data.message || 'Error submitting your message. Please try again.';
               errorDiv.style.display = 'block';
@@ -1334,6 +1440,9 @@
             errorDiv.style.display = 'block';
           } finally {
             submitBtn.disabled = false;
+            submitBtn.style.opacity = '1';
+            submitBtn.style.cursor = 'pointer';
+            submitBtn.textContent = 'Send Message';
           }
         });
         }
@@ -1360,6 +1469,9 @@
           successDiv.style.display = 'none';
           loadingDiv.style.display = 'block';
           submitBtn.disabled = true;
+          submitBtn.style.opacity = '0.6';
+          submitBtn.style.cursor = 'not-allowed';
+          submitBtn.value = 'Subscribing...';
 
           try {
             const formData = {
@@ -1398,6 +1510,10 @@
               newsletterForm.reset();
               // Scroll to success message
               successDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+              // Auto-hide success message after 5 seconds
+              setTimeout(() => {
+                successDiv.style.display = 'none';
+              }, 5000);
             } else {
               errorDiv.textContent = data.message || 'Error subscribing. Please try again.';
               errorDiv.style.display = 'block';
@@ -1415,6 +1531,9 @@
             errorDiv.style.display = 'block';
           } finally {
             submitBtn.disabled = false;
+            submitBtn.style.opacity = '1';
+            submitBtn.style.cursor = 'pointer';
+            submitBtn.value = 'Subscribe';
           }
         });
         }
