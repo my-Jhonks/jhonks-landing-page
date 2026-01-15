@@ -992,7 +992,7 @@
             <!-- End Google Maps -->
 
             <div class="col-lg-6">
-              <form id="contactForm" class="php-email-form" action="#" method="POST">
+              <form id="contactForm" action="#" method="POST" novalidate>
                 <div class="row gy-4">
                   <div class="col-md-6">
                     <input
@@ -1114,7 +1114,7 @@
               Subscribe to our newsletter and receive the latest news about our
               products and services!
             </p>
-            <form id="newsletterForm" class="php-email-form" action="#" method="POST">
+            <form id="newsletterForm" action="#" method="POST" novalidate>
               <div class="newsletter-form">
                 <input type="email" id="newsletterEmail" name="email" placeholder="Enter your email" required />
                 <input type="submit" id="newsletterSubmitBtn" value="Subscribe" />
@@ -1201,7 +1201,7 @@
 
     <!-- Vendor JS Files -->
     <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/vendor/php-email-form/validate.js"></script>
+    <!-- Removed validate.js to prevent iframe submission behavior -->
     <script src="assets/vendor/aos/aos.js"></script>
     <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
     <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
@@ -1212,16 +1212,54 @@
     <!-- Form Submission Scripts -->
     <script>
       // API Base URL 
-      // const API_BASE_URL = 'http://localhost:5000/api';
-      const API_BASE_URL = 'https://jhonksbackend.onrender.com/api';
+      const API_BASE_URL = 'http://localhost:5000/api';
+      // const API_BASE_URL = 'https://jhonksbackend.onrender.com/api';
 
       // Wait for DOM to be fully loaded before attaching handlers
       document.addEventListener('DOMContentLoaded', function() {
+        // Function to remove any hidden iframes (prevents iframe-based form submissions)
+        // Excludes the Google Maps iframe which should remain visible
+        const removeHiddenIframes = () => {
+          const allIframes = document.querySelectorAll('iframe');
+          allIframes.forEach(iframe => {
+            // Skip the Google Maps iframe (it has a visible height)
+            if (iframe.src && iframe.src.includes('google.com/maps')) {
+              return;
+            }
+            
+            // Remove iframes that are hidden or have no dimensions
+            const style = window.getComputedStyle(iframe);
+            if (style.display === 'none' || 
+                style.visibility === 'hidden' || 
+                (iframe.offsetHeight === 0 && iframe.offsetWidth === 0) ||
+                iframe.style.display === 'none' ||
+                iframe.style.visibility === 'hidden') {
+              try {
+                if (iframe.parentNode) {
+                  iframe.parentNode.removeChild(iframe);
+                }
+              } catch (e) {
+                // Ignore errors
+              }
+            }
+          });
+        };
+        
+        // Remove iframes on page load and periodically (but not too aggressively)
+        removeHiddenIframes();
+        // Check every 2 seconds for any new hidden iframes
+        setInterval(removeHiddenIframes, 2000);
+        
         // Contact Form Handler
         const contactForm = document.getElementById('contactForm');
         if (contactForm) {
-        contactForm.addEventListener('submit', async (e) => {
+          contactForm.addEventListener('submit', async (e) => {
           e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+          
+          // Remove any iframes before submission
+          removeHiddenIframes();
           
           const submitBtn = document.getElementById('contactSubmitBtn');
           const loadingDiv = document.getElementById('contactLoading');
@@ -1303,8 +1341,13 @@
         // Newsletter Form Handler
         const newsletterForm = document.getElementById('newsletterForm');
         if (newsletterForm) {
-        newsletterForm.addEventListener('submit', async (e) => {
+          newsletterForm.addEventListener('submit', async (e) => {
           e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+          
+          // Remove any iframes before submission
+          removeHiddenIframes();
           
           const submitBtn = document.getElementById('newsletterSubmitBtn');
           const loadingDiv = document.getElementById('newsletterLoading');
